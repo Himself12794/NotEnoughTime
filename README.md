@@ -8,3 +8,5 @@ Usage:
 
 The day is the time from 0 until 12000 and the night is from 12000 until 0 (Time resets to 0 at 24000). 
 By default, a minecraft unit of time is 6 ticks, and each tick is 0.05 seconds
+
+I coded this in a couple of hours, so forgive the sloppy quality.
