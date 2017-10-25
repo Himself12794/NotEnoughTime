@@ -1,7 +1,7 @@
 # timey-wimey
 Lets you modify how many ticks a minecraft time unit is. (Default is 6 ticks per unit)
 
-Usage:
+Usage:  
 `/tmod <day|night> 1.5` -> makes the day/night 1.5 times longer  
 `/tmod get` -> displays current settings  
 `/tmod toggle` -> toggles the time modifiers on/off  
