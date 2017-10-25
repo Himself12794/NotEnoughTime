@@ -1,0 +1,16 @@
+[
+{
+  "modid": "timeywimey",
+  "name": "Timey Wimey",
+  "description": "Doubles the flow of time",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Himself12794"],
+  "credits": "To me",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
