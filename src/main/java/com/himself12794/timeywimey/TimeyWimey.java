@@ -58,11 +58,6 @@ public class TimeyWimey
 					world.setWorldTime(0);
 				}
 				
-				if (world.provider.dimensionId == 0 && !world.isRemote) {
-					System.out.println("Last advance: " + data.ticksSinceLastAdvance);
-					System.out.println("Time: " + world.getWorldTime());
-				}
-				
 			} else {
 				world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
 			}

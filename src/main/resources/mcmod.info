@@ -2,7 +2,7 @@
 {
   "modid": "timeywimey",
   "name": "Timey Wimey",
-  "description": "Doubles the flow of time",
+  "description": "Allows modding the flow of time for the night and day, separately",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
