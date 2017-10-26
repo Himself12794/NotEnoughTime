@@ -45,3 +45,4 @@ run
 /usernamecache.json
 server.properties
 .classpath
+/asm/
