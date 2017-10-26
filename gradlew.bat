@@ -16,9 +16,6 @@ set APP_HOME=%DIRNAME%
 @rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
 set DEFAULT_JVM_OPTS=
 
-@rem Set manually, since this gradle wrapper version doesn't work with Java 9
-set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_111
-
 @rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome
 

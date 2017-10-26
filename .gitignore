@@ -1,9 +1,7 @@
 #gradle
 build
-gradle
 
 #other
-eclipse
 run
 
 /logs/
@@ -22,7 +20,6 @@ run
 /options.txt
 /.settings/
 /screenshots/
-/eclipse/
 /.gradle/
 /build/
 
@@ -30,8 +27,6 @@ run
 /bin/
 /build/
 /config/
-/eclipse/
-/gradle/
 /logs/
 /mods/
 /resourcepacks/
@@ -47,3 +42,4 @@ server.properties
 .classpath
 /asm/
 .project
+/eclipse/
