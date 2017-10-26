@@ -18,7 +18,7 @@ public class TimeCommands implements ICommand {
 
 	public final List<String> aliases = Lists.newArrayList();
 	
-	public final Set<String> subCommands = Sets.newHashSet("day", "night", "toggle", "get");
+	public final Set<String> subCommands = Sets.newHashSet("day", "night", "toggle", "get", "reset");
 	
 	public TimeCommands() {
 		aliases.add("timey");
@@ -41,7 +41,7 @@ public class TimeCommands implements ICommand {
 	}
 
 	@Override
-	public List getCommandAliases() {
+	public List<String> getCommandAliases() {
 		return aliases;
 	}
 
@@ -53,11 +53,11 @@ public class TimeCommands implements ICommand {
 			
 			if (args.length > 0 && subCommands.contains(args[0])) {
 				
-				if (!"toggle".equals(args[0]) && args.length > 1 && isValidFloat(args[1])) {
+				if (!"toggle".equals(args[0]) && args.length > 1 && isValidInteger(args[1])) {
 					WorldTicker ticker = WorldTicker.getForWorld(world);
 
-					float modifier = Float.parseFloat(args[1]);
-					int timeSpan = (int)(modifier * 6);
+					int modifier = Integer.parseInt(args[1]);
+					int timeSpan = modifier;
 					timeSpan = timeSpan <= 0 ? 1 : timeSpan;
 					if ("day".equals(args[0])) {
 						ticker.dayLengthMultiplier = timeSpan;
@@ -65,7 +65,7 @@ public class TimeCommands implements ICommand {
 						ticker.nightLengthMultiplier = timeSpan;
 					}
 					ticker.markDirty();
-					sendMessageToAll(sender, String.format("%s now has modifier %.2f (%d ticks per time unit) for dimension id %d", args[0], modifier, timeSpan, world.provider.dimensionId));
+					sendMessageToAll(sender, String.format("%s now has modifier %d for dimension id %d", args[0], modifier, world.provider.dimensionId));
 					
 				} else if ("toggle".equals(args[0])) {
 					WorldTicker ticker = WorldTicker.getForWorld(world);
@@ -75,14 +75,21 @@ public class TimeCommands implements ICommand {
 					sendMessageToAll(sender, "Time modding is now " + (ticker.isEnabled ? "on" : "off"));
 				} else if ("get".equals(args[0])) {
 					WorldTicker ticker = WorldTicker.getForWorld(world);
-					float modifierDay = (float)ticker.dayLengthMultiplier / 6;
-					float modifierNight = (float)ticker.nightLengthMultiplier / 6;
+					int modifierDay = ticker.dayLengthMultiplier;
+					int modifierNight = ticker.nightLengthMultiplier;
 					ticker.markDirty();
 					
-					String msg = String.format("Time mod is %s, dayLengthMod is %.2f (%d ticks), nightLengthMod is %.2f (%d ticks)", (ticker.isEnabled ? "ON" : "OFF"), modifierDay, ticker.dayLengthMultiplier, modifierNight, ticker.nightLengthMultiplier) ;
+					String msg = String.format("Time mod is %s, dayLengthMod is %d, nightLengthMod is %d", (ticker.isEnabled ? "ON" : "OFF"), modifierDay, modifierNight) ;
 					
 					sender.addChatMessage(new ChatComponentText(msg));
-				}
+				} else if ("reset".equals(args[0])) {
+					WorldTicker ticker = WorldTicker.getForWorld(world);
+					ticker.dayLengthMultiplier = 1;
+					ticker.nightLengthMultiplier = 1;
+					ticker.markDirty();
+					
+					sendMessageToAll(sender, "Time flow has been reset to normal");
+				} 
 				
 			} else {
 				sender.addChatMessage(new ChatComponentText("Invalid usage, usage is: " + getCommandUsage(sender)));
@@ -92,9 +99,9 @@ public class TimeCommands implements ICommand {
 		
 	}
 
-	private boolean isValidFloat(String val) {
+	private boolean isValidInteger(String val) {
 		try {
-			Float.parseFloat(val);
+			Integer.parseInt(val);
 			return true;
 		} catch (Exception e) {
 			
@@ -122,7 +129,7 @@ public class TimeCommands implements ICommand {
 	}
 
 	@Override
-	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
+	public List<String> addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
 		// TODO Auto-generated method stub
 		return null;
 	}

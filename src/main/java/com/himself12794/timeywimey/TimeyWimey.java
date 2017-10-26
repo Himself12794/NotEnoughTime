@@ -7,10 +7,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import net.minecraft.world.storage.MapStorage;
 
 @Mod(modid = TimeyWimey.MODID, version = TimeyWimey.VERSION)
 public class TimeyWimey
@@ -34,34 +34,43 @@ public class TimeyWimey
 		
 		@SubscribeEvent
 		public void onWorldTick(TickEvent.WorldTickEvent event) {
+
+
+			
 			World world = event.world;
+			/*
+			if (world.provider.dimensionId == 0 && !world.isRemote && event.phase == Phase.START) {
+				System.out.println("World info: " + world.getWorldInfo().getWorldTime());
+				System.out.println("World time: " + world.getWorldTime());
+				System.out.println("Total World info time: " + world.getWorldInfo().getWorldTotalTime());
+				System.out.println("Total World time: " + world.getTotalWorldTime());
+			}*/
+			if (event.phase == Phase.START) {
 			
-			boolean isDay = world.getWorldTime() < 12000;
-			
-			MapStorage storage = world.perWorldStorage;
-			
-			WorldTicker data = WorldTicker.getForWorld(world);
-			
-			if (data.isEnabled) {
-			
-				world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
+				long worldTime = world.getWorldInfo().getWorldTime();
+				long adjustedTime = worldTime % 24000;
+				boolean isDay = adjustedTime < 12000;
 				
-				data.ticksSinceLastAdvance++;
-				if (data.ticksSinceLastAdvance >= data.dayLengthMultiplier && isDay) {
-					data.ticksSinceLastAdvance = 0;
-					world.setWorldTime(world.getWorldTime() + 1);
-				} else if (data.ticksSinceLastAdvance >= data.nightLengthMultiplier && !isDay) {
-					data.ticksSinceLastAdvance = 0;
-					world.setWorldTime(world.getWorldTime() + 1);
-				}
-				if (world.getWorldTime() > 24000) {
-					world.setWorldTime(0);
-				}
+				WorldTicker data = WorldTicker.getForWorld(world);
 				
-			} else {
-				world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
+				if (data.isEnabled) {
+				
+					world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
+					
+					data.ticksSinceLastAdvance++;
+					if (data.ticksSinceLastAdvance >= data.dayLengthMultiplier && isDay) {
+						data.ticksSinceLastAdvance = 0;
+						world.getWorldInfo().setWorldTime(worldTime + 1);
+					} else if (data.ticksSinceLastAdvance >= data.nightLengthMultiplier && !isDay) {
+						data.ticksSinceLastAdvance = 0;
+						world.getWorldInfo().setWorldTime(worldTime + 1);
+					}
+					
+					data.markDirty();
+				} else {
+					world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
+				}
 			}
-			data.markDirty();
 		}
 	}
 	
@@ -69,8 +78,8 @@ public class TimeyWimey
 
 		public static final String PROPERTIES_ID = MODID + "_TickHandler";
 
-		int dayLengthMultiplier = 6;
-		int nightLengthMultiplier = 6;
+		int dayLengthMultiplier = 1;
+		int nightLengthMultiplier = 1;
 		int ticksSinceLastAdvance = 0;
 		boolean isEnabled = true;
 		

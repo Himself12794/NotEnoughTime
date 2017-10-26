@@ -44,3 +44,4 @@ run
 /options.txt
 /usernamecache.json
 server.properties
+.classpath
