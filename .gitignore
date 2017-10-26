@@ -46,3 +46,4 @@ run
 server.properties
 .classpath
 /asm/
+.project
