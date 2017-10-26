@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.himself12794.notenoughtime.world.WorldTimeData;
+import com.himself12794.notenoughtime.world.TimeFlowData;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -14,6 +14,14 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
+/**
+ * For configuring the flow of time.
+ * Usage:
+ * <pre><code>/tmod &lt;night|day|toggle|get&gt; &lt;multiplier&gt;</code></pre>
+ * 
+ * @author Himself12794
+ *
+ */
 public class TimeCommands implements ICommand {
 
 	public final List<String> aliases = Lists.newArrayList();
@@ -52,22 +60,20 @@ public class TimeCommands implements ICommand {
 			
 			if (args.length > 0 && subCommands.contains(args[0])) {
 				
-				if (!"toggle".equals(args[0]) && args.length > 1 && isValidInteger(args[1])) {
-					WorldTimeData ticker = WorldTimeData.getForWorld(world);
+				if (!"toggle".equals(args[0]) && args.length > 1 && isValidFloat(args[1])) {
+					TimeFlowData flowData = TimeFlowData.getForWorld(world);
 
-					int modifier = Integer.parseInt(args[1]);
-					int timeSpan = modifier;
-					timeSpan = timeSpan <= 0 ? 1 : timeSpan;
+					float modifier = Float.parseFloat(args[1]);
 					if ("day".equals(args[0])) {
-						ticker.dayLengthMultiplier = timeSpan;
+						flowData.dayLengthMultiplier = modifier;
 					} else if ("night".equals(args[0])){
-						ticker.nightLengthMultiplier = timeSpan;
+						flowData.nightLengthMultiplier = modifier;
 					}
-					ticker.markDirty();
-					sendMessageToAll(sender, String.format("%s now has modifier %d for dimension id %d", args[0], modifier, world.provider.dimensionId));
+					flowData.markDirty();
+					sendMessageToAll(sender, String.format("%s now has modifier %f for dimension id %d", args[0], modifier, world.provider.dimensionId));
 					
 				} else if ("toggle".equals(args[0])) {
-					WorldTimeData ticker = WorldTimeData.getForWorld(world);
+					TimeFlowData ticker = TimeFlowData.getForWorld(world);
 					ticker.isEnabled = !ticker.isEnabled;
 					if (!ticker.isEnabled) {
 						world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
@@ -79,17 +85,17 @@ public class TimeCommands implements ICommand {
 					
 					sendMessageToAll(sender, "Time modding is now " + (ticker.isEnabled ? "on" : "off"));
 				} else if ("get".equals(args[0])) {
-					WorldTimeData ticker = WorldTimeData.getForWorld(world);
-					int modifierDay = ticker.dayLengthMultiplier;
-					int modifierNight = ticker.nightLengthMultiplier;
-					ticker.markDirty();
+					TimeFlowData flowData = TimeFlowData.getForWorld(world);
+					float modifierDay = flowData.dayLengthMultiplier;
+					float modifierNight = flowData.nightLengthMultiplier;
+					flowData.markDirty();
 					
-					String msg = String.format("Time mod is %s, dayLengthMod is %d, nightLengthMod is %d", (ticker.isEnabled ? "ON" : "OFF"), modifierDay, modifierNight) ;
+					String msg = String.format("Time mod is %s, dayLengthMod is %f, nightLengthMod is %f", (flowData.isEnabled ? "ON" : "OFF"), modifierDay, modifierNight) ;
 					sender.addChatMessage(new ChatComponentText(msg));
 				} else if ("reset".equals(args[0])) {
-					WorldTimeData ticker = WorldTimeData.getForWorld(world);
-					ticker.dayLengthMultiplier = 1;
-					ticker.nightLengthMultiplier = 1;
+					TimeFlowData ticker = TimeFlowData.getForWorld(world);
+					ticker.dayLengthMultiplier = 1.0F;
+					ticker.nightLengthMultiplier = 1.0F;
 					ticker.markDirty();
 					
 					sendMessageToAll(sender, "Time flow has been reset to normal");
@@ -103,9 +109,9 @@ public class TimeCommands implements ICommand {
 		
 	}
 
-	private boolean isValidInteger(String val) {
+	private boolean isValidFloat(String val) {
 		try {
-			Integer.parseInt(val);
+			Float.parseFloat(val);
 			return true;
 		} catch (Exception e) {
 			
