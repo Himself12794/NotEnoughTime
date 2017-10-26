@@ -17,7 +17,7 @@ set APP_HOME=%DIRNAME%
 set DEFAULT_JVM_OPTS=
 
 @rem Set manually, since this gradle wrapper version doesn't work with Java 9
-set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_101
+set JAVA_HOME=C:\Program Files\Java\jdk1.8.0_111
 
 @rem Find java.exe
 if defined JAVA_HOME goto findJavaFromJavaHome

@@ -70,7 +70,7 @@ public class TimeCommands implements ICommand {
 						flowData.nightLengthMultiplier = modifier;
 					}
 					flowData.markDirty();
-					sendMessageToAll(sender, String.format("%s now has modifier %f for dimension id %d", args[0], modifier, world.provider.dimensionId));
+					sendMessageToAll(sender, String.format("%s now has modifier %s for dimension id %d", args[0], modifier, world.provider.dimensionId));
 					
 				} else if ("toggle".equals(args[0])) {
 					TimeFlowData ticker = TimeFlowData.getForWorld(world);
@@ -90,7 +90,7 @@ public class TimeCommands implements ICommand {
 					float modifierNight = flowData.nightLengthMultiplier;
 					flowData.markDirty();
 					
-					String msg = String.format("Time mod is %s, dayLengthMod is %f, nightLengthMod is %f", (flowData.isEnabled ? "ON" : "OFF"), modifierDay, modifierNight) ;
+					String msg = String.format("Time mod is %s, dayLengthMod is %s, nightLengthMod is %s", (flowData.isEnabled ? "ON" : "OFF"), modifierDay, modifierNight) ;
 					sender.addChatMessage(new ChatComponentText(msg));
 				} else if ("reset".equals(args[0])) {
 					TimeFlowData ticker = TimeFlowData.getForWorld(world);
