@@ -25,7 +25,7 @@ public class TimeFlowData extends WorldSavedData {
 	// Defaults
 	public float dayLengthMultiplier = 1.0F;
 	public float nightLengthMultiplier = 1.0F;
-	public double partialTickCounter = 0D;
+	public float partialTickCounter = 0F;
 	public boolean isEnabled = true;
 	
 	public TimeFlowData(String id) {
@@ -52,7 +52,7 @@ public class TimeFlowData extends WorldSavedData {
 	public void readFromNBT(NBTTagCompound worldData) {
 		NotEnoughTime.getLogger().info("Loading WorldSavedData");
 		if (worldData.hasKey(PARTIAL_TICK_COUNTER)) {
-			partialTickCounter = worldData.getDouble(PARTIAL_TICK_COUNTER);
+			partialTickCounter = worldData.getFloat(PARTIAL_TICK_COUNTER);
 		} 
 		if (worldData.hasKey(DAY_MULTIPLIER)) {
 			dayLengthMultiplier = worldData.getFloat(DAY_MULTIPLIER);
@@ -67,7 +67,7 @@ public class TimeFlowData extends WorldSavedData {
 
 	@Override
 	public void writeToNBT(NBTTagCompound worldData) {
-		worldData.setDouble(PARTIAL_TICK_COUNTER, partialTickCounter);
+		worldData.setFloat(PARTIAL_TICK_COUNTER, partialTickCounter);
 		worldData.setFloat(DAY_MULTIPLIER, dayLengthMultiplier);
 		worldData.setFloat(NIGHT_MULTIPLIER, nightLengthMultiplier);
 		worldData.setBoolean(IS_ENABLED, isEnabled);

@@ -61,12 +61,12 @@ public class TimeFlowHandler {
 				multiplier = data.nightLengthMultiplier;
 			}
 			int fullTicks = (int)multiplier;
-			double partialTicks = data.partialTickCounter;
-			if (Math.abs(partialTicks) >= 1) {
+			float partialTicks = data.partialTickCounter;
+			if (Math.abs(partialTicks) >= 1.0F) {
 				fullTicks += (int)partialTicks;
 				data.partialTickCounter = getPartialValue(partialTicks);
 			}
-			double partialMult = getPartialValue(multiplier);
+			float partialMult = getPartialValue(multiplier);
 			data.partialTickCounter += partialMult;
 			worldTime += fullTicks;
 			
@@ -128,8 +128,8 @@ public class TimeFlowHandler {
 	 * @param value
 	 * @return
 	 */
-	private static double getPartialValue(double value) {
-		int head = value < 0 ? MathHelper.ceiling_double_int(value) : MathHelper.floor_double(value);
+	private static float getPartialValue(float value) {
+		int head = value < 0 ? MathHelper.ceiling_float_int(value) : MathHelper.floor_float(value);
 		return value - head;
 	}
 	
