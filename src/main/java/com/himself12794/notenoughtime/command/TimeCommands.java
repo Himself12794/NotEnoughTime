@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import com.himself12794.notenoughtime.NotEnoughTime;
 import com.himself12794.notenoughtime.world.TimeFlowData;
 
 import net.minecraft.command.ICommand;
@@ -106,12 +107,7 @@ public class TimeCommands implements ICommand {
 	public void commandToggle(ICommandSender sender, World world) {
 		TimeFlowData ticker = TimeFlowData.getForWorld(world);
 		ticker.isEnabled = !ticker.isEnabled;
-		if (!ticker.isEnabled) {
-			world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
-		} else {
-			world.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
-		}
-		
+		world.getGameRules().setOrCreateGameRule("doDaylightCycle", String.valueOf(!ticker.isEnabled));
 		ticker.markDirty();
 		
 		sendMessageToAll(sender, "Time modding is now " + (ticker.isEnabled ? "on" : "off"));
@@ -131,6 +127,7 @@ public class TimeCommands implements ICommand {
 		TimeFlowData ticker = TimeFlowData.getForWorld(world);
 		ticker.dayLengthMultiplier = 1.0F;
 		ticker.nightLengthMultiplier = 1.0F;
+		ticker.isEnabled = false;
 		ticker.markDirty();
 		
 		sendMessageToAll(sender, "Time flow has been reset to normal");

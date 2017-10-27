@@ -18,18 +18,13 @@ public class TimeFlowHandler {
 	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
-
-		World world = event.world;
-		/*
-		if (world.provider.dimensionId == 0 && !world.isRemote && event.phase == Phase.START) {
-			System.out.println("World info: " + world.getWorldInfo().getWorldTime());
-			System.out.println("World time: " + world.getWorldTime());
-			System.out.println("Total World info time: " + world.getWorldInfo().getWorldTotalTime());
-			System.out.println("Total World time: " + world.getTotalWorldTime());
-		}*/
-		if (event.phase == Phase.START) {
-			updateTime(world);
+		
+		if (event.world.provider.dimensionId == 1) {
+			System.out.println(event.phase + "-Cycle status: " + event.world.getGameRules().getGameRuleBooleanValue("doDaylightCycle"));
 		}
+		if (event.phase == Phase.START) {
+			updateTime(event.world);
+		} 
 	}
 
 	/**
@@ -70,9 +65,10 @@ public class TimeFlowHandler {
 				worldTime += dayLength;
 			}
 			world.getWorldInfo().setWorldTime(worldTime);
-			
-			data.markDirty();
 		} 
+		
+		data.markDirty();
+		
 	}
 	
 	/**

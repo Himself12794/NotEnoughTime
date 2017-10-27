@@ -38,11 +38,11 @@ public class TimeFlowData extends WorldSavedData {
 
 	public static TimeFlowData getForWorld(World world) {
 
-		TimeFlowData data = (TimeFlowData)world.perWorldStorage.loadData(TimeFlowData.class, TimeFlowData.PROPERTIES_ID);
+		TimeFlowData data = (TimeFlowData)world.mapStorage.loadData(TimeFlowData.class, TimeFlowData.PROPERTIES_ID);
 		if (data == null) {
 			NotEnoughTime.getLogger().info("Registering WorldSavedData for dimension {}", world.provider.dimensionId);
 			data = new TimeFlowData();
-			world.perWorldStorage.setData(TimeFlowData.PROPERTIES_ID, data);
+			world.mapStorage.setData(TimeFlowData.PROPERTIES_ID, data);
 		}
 		
 		return data;
@@ -67,8 +67,6 @@ public class TimeFlowData extends WorldSavedData {
 
 	@Override
 	public void writeToNBT(NBTTagCompound worldData) {
-		NotEnoughTime.getLogger().info("Saving WorldSavedData");
-		
 		worldData.setDouble(PARTIAL_TICK_COUNTER, partialTickCounter);
 		worldData.setFloat(DAY_MULTIPLIER, dayLengthMultiplier);
 		worldData.setFloat(NIGHT_MULTIPLIER, nightLengthMultiplier);
