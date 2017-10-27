@@ -1,10 +1,15 @@
 package com.himself12794.notenoughtime.handlers;
 
+import java.lang.reflect.Field;
+
 import com.himself12794.notenoughtime.world.TimeFlowData;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import net.minecraft.network.play.server.S03PacketTimeUpdate;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -12,12 +17,18 @@ public class TimeFlowHandler {
 	
 	private int dayLength = 24000;
 	private int nightTime = 12000;
+	private boolean getManagerFailed = false;
+	private ServerConfigurationManager configManager = null;
 	
 	public TimeFlowHandler() {
 	}
 	
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
+		
+		if (configManager == null && !getManagerFailed) {
+			configManager = getServerConfigManager();
+		}
 		
 		if (event.phase == Phase.START) {
 			updateTime(event.world);
@@ -62,10 +73,25 @@ public class TimeFlowHandler {
 				worldTime += dayLength;
 			}
 			world.getWorldInfo().setWorldTime(worldTime);
+			if (configManager != null) {
+				configManager.sendPacketToAllPlayersInDimension(new S03PacketTimeUpdate(world.getTotalWorldTime(), world.getWorldTime(), data.isEnabled), world.provider.dimensionId);
+			}
 		} 
 		
 		data.markDirty();
 		
+	}
+	
+	public ServerConfigurationManager getServerConfigManager() {
+		
+		try {
+			Field field = MinecraftServer.class.getDeclaredField("serverConfigManager");
+			field.setAccessible(true);
+			return (ServerConfigurationManager)field.get(MinecraftServer.getServer());
+		} catch (Exception e) {
+			getManagerFailed = true;
+		}
+		return null;
 	}
 	
 	/**
