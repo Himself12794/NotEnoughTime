@@ -27,7 +27,7 @@ public class TimeCommands implements ICommand {
 
 	public final List<String> aliases = Lists.newArrayList();
 	
-	public final Set<String> subCommands = Sets.newHashSet("day", "night", "toggle", "get", "reset");
+	public final Set<String> subCommands = Sets.newHashSet("day", "night", "toggle", "get", "reset", "debug");
 	
 	public TimeCommands() {
 		aliases.add("tmod");
@@ -45,7 +45,7 @@ public class TimeCommands implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "timemod <night|day|toggle|get> <multiplier>";
+		return "timemod <night|day|toggle|get|debug> <multiplier>";
 	}
 
 	@Override
@@ -70,6 +70,9 @@ public class TimeCommands implements ICommand {
 					break;
 				case "reset":
 					commandReset(sender, world);
+					break;
+				case "debug":
+					commandDebug(sender, world);
 					break;
 				case "day":
 				case "night": {
@@ -111,6 +114,18 @@ public class TimeCommands implements ICommand {
 		ticker.markDirty();
 		
 		sendMessageToAll(sender, "Time modding is now " + (ticker.isEnabled ? "on" : "off"));
+	}
+	
+	public void commandDebug(ICommandSender sender, World world) {
+		String debugText = "------------\n";
+		TimeFlowData data = TimeFlowData.getForWorld(world);
+		debugText += data.toString();
+		debugText += "worldTime: " + world.getWorldInfo().getWorldTime() + "\n"; 
+		debugText += "worldTotalTime: " + world.getWorldInfo().getWorldTotalTime() + "\n"; 
+		
+		for (String str : debugText.split("\n")) {
+			sender.addChatMessage(new ChatComponentText(str));
+		}
 	}
 	
 	public void commandGet(ICommandSender sender, World world) {

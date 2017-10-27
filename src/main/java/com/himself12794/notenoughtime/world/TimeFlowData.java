@@ -20,7 +20,7 @@ public class TimeFlowData extends WorldSavedData {
 	public static final String PARTIAL_TICK_COUNTER = "partialTickCounter";
 	public static final String DAY_MULTIPLIER = "dayMultiplier";
 	public static final String NIGHT_MULTIPLIER = "nightMultiplier";
-	public static final String IS_ENABLED = "nightMultiplier";
+	public static final String IS_ENABLED = "isEnabled";
 	
 	// Defaults
 	public float dayLengthMultiplier = 1.0F;
@@ -71,6 +71,17 @@ public class TimeFlowData extends WorldSavedData {
 		worldData.setFloat(DAY_MULTIPLIER, dayLengthMultiplier);
 		worldData.setFloat(NIGHT_MULTIPLIER, nightLengthMultiplier);
 		worldData.setBoolean(IS_ENABLED, isEnabled);
+	}
+	
+	public String toString() {
+		
+		StringBuilder str = new StringBuilder();
+		str.append("dayModifier: ").append(dayLengthMultiplier).append("\n");
+		str.append("nightModifier: ").append(nightLengthMultiplier).append("\n");
+		str.append("partialTickCounter: ").append(partialTickCounter).append("\n");
+		str.append("isEnabled: ").append(isEnabled).append("\n");
+		
+		return str.toString();
 	}
 	
 }
