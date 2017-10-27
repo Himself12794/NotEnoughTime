@@ -1,6 +1,7 @@
 package com.himself12794.notenoughtime.handlers;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import com.himself12794.notenoughtime.world.TimeFlowData;
 
@@ -12,6 +13,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
 
 public class TimeFlowHandler {
 	
@@ -42,10 +44,11 @@ public class TimeFlowHandler {
 	 * @param world
 	 */
 	public void updateTime(World world) {
+		handleServerSleeping(world);
+		
 		long worldTime = world.getWorldInfo().getWorldTime();
 		long adjustedTime = worldTime % dayLength;
 		boolean isDay = adjustedTime < nightTime;
-		
 		TimeFlowData data = TimeFlowData.getForWorld(world);
 		
 		if (data.isEnabled) {
@@ -80,6 +83,31 @@ public class TimeFlowHandler {
 		
 		data.markDirty();
 		
+	}
+	
+	/**
+	 * Replaces normal sleeping logic with doDaylightCycle on, so time will still advance
+	 * if time modding is activated
+	 * 
+	 * @param world
+	 */
+	public void handleServerSleeping(World world) {
+		WorldServer server = (WorldServer)world;
+		
+		if (server.areAllPlayersAsleep()) {
+            if (TimeFlowData.getForWorld(server).isEnabled) {
+                long i = server.getWorldInfo().getWorldTime() + 24000L;
+                server.getWorldInfo().setWorldTime(i - i % 24000L);
+            }
+            
+            try {
+	            Method method = server.getClass().getMethod("wakeAllPLayers");
+	            method.setAccessible(true);
+	            method.invoke(server);
+            } catch (Exception e) {
+            	
+            } 
+        }
 	}
 	
 	public ServerConfigurationManager getServerConfigManager() {
