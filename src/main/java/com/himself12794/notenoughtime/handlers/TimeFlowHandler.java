@@ -19,9 +19,6 @@ public class TimeFlowHandler {
 	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
 		
-		if (event.world.provider.dimensionId == 1) {
-			System.out.println(event.phase + "-Cycle status: " + event.world.getGameRules().getGameRuleBooleanValue("doDaylightCycle"));
-		}
 		if (event.phase == Phase.START) {
 			updateTime(event.world);
 		} 

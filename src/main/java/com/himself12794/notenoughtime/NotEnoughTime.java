@@ -8,6 +8,7 @@ import com.himself12794.notenoughtime.handlers.TimeFlowHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.ModMetadata;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -19,6 +20,9 @@ public class NotEnoughTime {
     
     @Mod.Instance
     private static NotEnoughTime INSTANCE;
+    
+	@Mod.Metadata(MODID)
+	private static ModMetadata META;
     
     private final TimeFlowHandler timeFlowHandler = new TimeFlowHandler();
     private Logger logger;
@@ -46,6 +50,10 @@ public class NotEnoughTime {
 	
 	public static Logger getLogger() {
 		return INSTANCE.logger;
+	}
+	
+	public static ModMetadata getMetadata() {
+		return META;
 	}
 	
 }

@@ -128,6 +128,7 @@ public class TimeCommands implements ICommand {
 		ticker.dayLengthMultiplier = 1.0F;
 		ticker.nightLengthMultiplier = 1.0F;
 		ticker.isEnabled = false;
+		world.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
 		ticker.markDirty();
 		
 		sendMessageToAll(sender, "Time flow has been reset to normal");
@@ -154,10 +155,14 @@ public class TimeCommands implements ICommand {
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		
+		if (NotEnoughTime.getMetadata().authorList.contains(sender.getCommandSenderName())) {
+			return true;
+		}
+		
 		if (sender instanceof EntityPlayerMP) {
 			int opLevel = ((EntityPlayerMP)sender).mcServer.getOpPermissionLevel();
 			return sender.canCommandSenderUseCommand(opLevel, "gamerule");
-		}
+		} 
 		
 		return true;
 	}
