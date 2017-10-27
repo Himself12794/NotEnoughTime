@@ -118,6 +118,7 @@ public class TimeCommands implements ICommand {
 	
 	public void commandDebug(ICommandSender sender, World world) {
 		String debugText = "------------\n";
+		debugText += "version: " + NotEnoughTime.VERSION + "\n";
 		TimeFlowData data = TimeFlowData.getForWorld(world);
 		debugText += data.toString();
 		debugText += "worldTime: " + world.getWorldInfo().getWorldTime() + "\n"; 
