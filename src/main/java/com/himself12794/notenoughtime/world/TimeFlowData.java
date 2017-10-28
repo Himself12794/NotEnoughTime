@@ -40,7 +40,7 @@ public class TimeFlowData extends WorldSavedData {
 
 		TimeFlowData data = (TimeFlowData)world.mapStorage.loadData(TimeFlowData.class, TimeFlowData.PROPERTIES_ID);
 		if (data == null) {
-			NotEnoughTime.getLogger().info("Registering WorldSavedData for dimension {}", world.provider.dimensionId);
+			NotEnoughTime.logger().info("Registering WorldSavedData for dimension {}", world.provider.dimensionId);
 			data = new TimeFlowData();
 			world.mapStorage.setData(TimeFlowData.PROPERTIES_ID, data);
 		}
@@ -50,7 +50,7 @@ public class TimeFlowData extends WorldSavedData {
 	
 	@Override
 	public void readFromNBT(NBTTagCompound worldData) {
-		NotEnoughTime.getLogger().info("Loading WorldSavedData");
+		NotEnoughTime.logger().info("Loading WorldSavedData");
 		if (worldData.hasKey(PARTIAL_TICK_COUNTER)) {
 			partialTickCounter = worldData.getFloat(PARTIAL_TICK_COUNTER);
 		} 

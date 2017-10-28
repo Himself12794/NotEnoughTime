@@ -1,8 +1,9 @@
-package com.himself12794.notenoughtime.handlers;
+package com.himself12794.notenoughtime.handlers.common;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import com.himself12794.notenoughtime.NotEnoughTime;
 import com.himself12794.notenoughtime.world.TimeFlowData;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,6 +15,7 @@ import net.minecraft.server.management.ServerConfigurationManager;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import scala.tools.nsc.transform.patmat.Logic.PropositionalLogic.Not;
 
 public class TimeFlowHandler {
 	
@@ -33,6 +35,7 @@ public class TimeFlowHandler {
 		}
 		
 		if (event.phase == Phase.START) {
+			handleServerSleeping(event.world);
 			updateTime(event.world);
 		} 
 	}
@@ -44,9 +47,7 @@ public class TimeFlowHandler {
 	 * @param world
 	 */
 	public void updateTime(World world) {
-		handleServerSleeping(world);
-		
-		long worldTime = world.getWorldInfo().getWorldTime();
+		long worldTime = getTime(world);
 		long adjustedTime = worldTime % dayLength;
 		boolean isDay = adjustedTime < nightTime;
 		TimeFlowData data = TimeFlowData.getForWorld(world);
@@ -75,13 +76,30 @@ public class TimeFlowHandler {
 				worldTime %= dayLength;
 				worldTime += dayLength;
 			}
-			world.getWorldInfo().setWorldTime(worldTime);
-			if (configManager != null) {
+			setTime(world, worldTime);
+			
+			if (configManager != null && NotEnoughTime.config().updateTimePerTick()) {
 				configManager.sendPacketToAllPlayersInDimension(new S03PacketTimeUpdate(world.getTotalWorldTime(), world.getWorldTime(), data.isEnabled), world.provider.dimensionId);
 			}
 		} 
 		
 		data.markDirty();
+		
+	}
+	
+	public long getTime(World world) {
+		return world.isRemote ? 
+				world.getWorldTime() : 
+					world.getWorldInfo().getWorldTime();
+	}
+	
+	public void setTime(World world, long time) {
+		
+		if (world.isRemote) {
+			world.setWorldTime(time);
+		} else {
+			world.getWorldInfo().setWorldTime(time);
+		}
 		
 	}
 	
