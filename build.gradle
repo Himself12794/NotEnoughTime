@@ -17,14 +17,17 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.0"
-group= "com.himself12794.timeywimey"
-archivesBaseName = "timeywimey"
+version = "1.0.0-pre3"
+group= "com.himself12794.notenoughtime"
+archivesBaseName = "NotEnoughTime"
 
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "eclipse"
 }
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 dependencies {
 

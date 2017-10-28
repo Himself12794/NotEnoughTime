@@ -1,8 +1,8 @@
 [
 {
-  "modid": "timeywimey",
-  "name": "Timey Wimey",
-  "description": "Allows modding the flow of time for the night and day, separately",
+  "modid": "notenoughtime",
+  "name": "NotEnoughTime",
+  "description": "Allows modding the flow of time for the night and day, speeding it up, slowing it, or even reversing it.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "",
